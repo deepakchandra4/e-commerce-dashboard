@@ -1,12 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import {useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
     const [name , setName] = useState("");
     const [password , setPassword] = useState("");
     const [email , setEmail] = useState("");
+    const navigate = useNavigate();
 
     const handleChangeName = (e) => {
         setName(e.target.value);
+       
     }
     const handleChangeEmail = (e) => {
         setEmail(e.target.value);
@@ -15,8 +18,23 @@ const SignUp = () => {
         setPassword(e.target.value);
     }
 
-    const collectData = () => {
-        console.warn(name , email , password)
+    const collectData = async () => {
+        setName('');
+        setEmail('');
+        setPassword('');
+        console.warn(name , email , password);
+        let result = await fetch('http://localhost:4000/register' , {
+          method:"POST",
+          body: JSON.stringify({name,email,password}),
+          headers: {
+            'Content-Type':'application/json'
+          },
+        });
+        result = await result.json();
+        console.warn(result);
+        if(result){
+          navigate('/register');
+        }
     }
 
   return (
